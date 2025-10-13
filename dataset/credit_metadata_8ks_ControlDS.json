@@ -1,0 +1,20 @@
+{
+	"name": "credit_metadata_8ks_ControlDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQLcreditcard",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "credit_metadata_8ks_20250928"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "creditcontrol"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

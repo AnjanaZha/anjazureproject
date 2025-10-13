@@ -1,0 +1,186 @@
+{
+	"name": "sk_df_br_sil",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "skBronzeTxns",
+						"type": "DatasetReference"
+					},
+					"name": "skBronzeTxns"
+				},
+				{
+					"dataset": {
+						"referenceName": "skBronzeAcc",
+						"type": "DatasetReference"
+					},
+					"name": "skBronzeAcc"
+				},
+				{
+					"dataset": {
+						"referenceName": "DelimitedText2",
+						"type": "DatasetReference"
+					},
+					"name": "skBronzeUsr"
+				},
+				{
+					"dataset": {
+						"referenceName": "sk_prop_credscr",
+						"type": "DatasetReference"
+					},
+					"name": "skBronzeCred"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "sk_txns",
+						"type": "DatasetReference"
+					},
+					"name": "skSilverTxns"
+				},
+				{
+					"dataset": {
+						"referenceName": "sk_usr",
+						"type": "DatasetReference"
+					},
+					"name": "skSilverUsr"
+				},
+				{
+					"dataset": {
+						"referenceName": "sk_cred",
+						"type": "DatasetReference"
+					},
+					"name": "skSilverCred"
+				},
+				{
+					"dataset": {
+						"referenceName": "sk_acc",
+						"type": "DatasetReference"
+					},
+					"name": "skSilverAcc"
+				}
+			],
+			"transformations": [
+				{
+					"name": "NullCheckAcc"
+				},
+				{
+					"name": "NullCheckCred"
+				},
+				{
+					"name": "castTxns"
+				},
+				{
+					"name": "castAcc"
+				},
+				{
+					"name": "castUsr"
+				},
+				{
+					"name": "castCred"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          txn_id as string,",
+				"          account_id as string,",
+				"          txn_ts as string,",
+				"          amount as string,",
+				"          txn_type as string,",
+				"          category as string,",
+				"          merchant as string,",
+				"          is_foreign as string,",
+				"          is_high_risk as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> skBronzeTxns",
+				"source(output(",
+				"          account_id as string,",
+				"          user_id as string,",
+				"          account_type as string,",
+				"          balance as string,",
+				"          credit_limit as string,",
+				"          created_at as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> skBronzeAcc",
+				"source(output(",
+				"          user_id as string,",
+				"          full_name as string,",
+				"          dob as string,",
+				"          gender as string,",
+				"          annual_income as string,",
+				"          employment_status as string,",
+				"          created_at as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> skBronzeUsr",
+				"source(output(",
+				"          score_id as string,",
+				"          user_id as string,",
+				"          credit_score as string,",
+				"          risk_level as string,",
+				"          last_updated as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> skBronzeCred",
+				"skBronzeAcc derive(credit_limit = iif(isNull(credit_limit), \"0\", credit_limit)) ~> NullCheckAcc",
+				"skBronzeCred derive(credit_score = iif(isNull(credit_score), \"0\", credit_score)) ~> NullCheckCred",
+				"skBronzeTxns cast(output(",
+				"          txn_id as integer,",
+				"          account_id as integer,",
+				"          amount as double '000,000,000.000',",
+				"          is_foreign as boolean,",
+				"          is_high_risk as boolean",
+				"     ),",
+				"     errors: true) ~> castTxns",
+				"NullCheckAcc cast(output(",
+				"          account_id as integer,",
+				"          user_id as integer,",
+				"          balance as double '000,000,000.000',",
+				"          credit_limit as double '000,000,000.000'",
+				"     ),",
+				"     errors: true) ~> castAcc",
+				"skBronzeUsr cast(output(",
+				"          user_id as integer,",
+				"          dob as date 'yyyy-MM-dd',",
+				"          annual_income as double '000,000,000.000'",
+				"     ),",
+				"     errors: true) ~> castUsr",
+				"NullCheckCred cast(output(",
+				"          score_id as integer,",
+				"          user_id as integer,",
+				"          credit_score as integer",
+				"     ),",
+				"     errors: true) ~> castCred",
+				"castTxns sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> skSilverTxns",
+				"castUsr sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> skSilverUsr",
+				"castCred sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> skSilverCred",
+				"castAcc sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> skSilverAcc"
+			]
+		}
+	}
+}

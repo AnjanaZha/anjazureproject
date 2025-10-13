@@ -1,0 +1,28 @@
+{
+	"name": "mergedDatasetCrypto",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "blob_to_blob_crypto",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "denis_crypto"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "merged-crypto.txt",
+				"folderPath": "bronze-merged",
+				"container": "crypto-container"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

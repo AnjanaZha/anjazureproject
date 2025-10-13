@@ -1,0 +1,20 @@
+{
+	"name": "MetadataDrivenCopyTask_i2x_ControlDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQLcreditcard",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "MetadataDrivenCopyTask_i2x_20250924"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "credit",
+			"table": "meta_control"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,62 @@
+{
+	"name": "skBronzeTxns",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sk_linkedservice_blobstorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "transactions_full.csv",
+				"folderPath": "bronze",
+				"container": "sk-container"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "txn_id",
+				"type": "String"
+			},
+			{
+				"name": "account_id",
+				"type": "String"
+			},
+			{
+				"name": "txn_ts",
+				"type": "String"
+			},
+			{
+				"name": "amount",
+				"type": "String"
+			},
+			{
+				"name": "txn_type",
+				"type": "String"
+			},
+			{
+				"name": "category",
+				"type": "String"
+			},
+			{
+				"name": "merchant",
+				"type": "String"
+			},
+			{
+				"name": "is_foreign",
+				"type": "String"
+			},
+			{
+				"name": "is_high_risk",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

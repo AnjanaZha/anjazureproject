@@ -1,0 +1,41 @@
+{
+	"name": "KB_branch",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStoragenewlast",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Bank_kevin"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "KB_branches.csv",
+				"folderPath": "Bronze",
+				"container": "kevin-bank-data"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "BranchID",
+				"type": "String"
+			},
+			{
+				"name": "BranchName",
+				"type": "String"
+			},
+			{
+				"name": "AddressID",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

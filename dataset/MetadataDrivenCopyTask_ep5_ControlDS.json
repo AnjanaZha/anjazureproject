@@ -1,0 +1,19 @@
+{
+	"name": "MetadataDrivenCopyTask_ep5_ControlDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "azure_incrementalLoad",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "MetadataDrivenCopyTask_ep5_20250924"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"table": "MainControlTable_ep5"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

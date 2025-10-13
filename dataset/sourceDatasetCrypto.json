@@ -1,0 +1,27 @@
+{
+	"name": "sourceDatasetCrypto",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "MySql2",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"cw_tableName": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "denis_crypto"
+		},
+		"annotations": [],
+		"type": "MySqlTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().cw_tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

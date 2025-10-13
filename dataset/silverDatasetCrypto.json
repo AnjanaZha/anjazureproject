@@ -1,0 +1,21 @@
+{
+	"name": "silverDatasetCrypto",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "blob_to_blob_crypto",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "silver",
+				"container": "crypto-container"
+			},
+			"compressionCodec": "none"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

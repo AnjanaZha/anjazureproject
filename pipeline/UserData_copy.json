@@ -1,0 +1,156 @@
+{
+	"name": "UserData_copy",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup_metadata",
+				"description": "This activity will query the metadata table to get the WatermarkValue",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "SELECT * FROM [dbo].[metadata] WHERE TableName = 'UserData'",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Copy userdata sql to blob",
+				"description": "It will copy data from your SQL Database to your Blob Storage",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Lookup_metadata",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "SELECT * FROM [dbo].[UserData] ",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings",
+							"copyBehavior": "FlattenHierarchy"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Ds_UserData_Source",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Ds_UserData_Blob_Sink",
+						"type": "DatasetReference",
+						"parameters": {
+							"fileName": "usernew",
+							"folderName": "UserData"
+						}
+					}
+				]
+			},
+			{
+				"name": "UpdateWatermark",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Copy userdata sql to blob",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[sp_update_watermark]",
+					"storedProcedureParameters": {
+						"TableName": {
+							"value": "UserData",
+							"type": "String"
+						},
+						"WatermarkValue": {
+							"value": {
+								"value": "@utcNow()",
+								"type": "Expression"
+							},
+							"type": "DateTime"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "Ls_AzureSQL_Sourc",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"folderName": {
+				"type": "String",
+				"defaultValue": "UserData"
+			},
+			"fileName": {
+				"type": "String",
+				"defaultValue": "@concat('UserData_', formatDateTime(utcNow(), 'yyyyMMddHHmmss'))"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-09-30T18:32:59Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

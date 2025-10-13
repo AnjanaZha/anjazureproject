@@ -1,0 +1,54 @@
+{
+	"name": "Ds_Sql_EnergyTable_Param",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Ls_AzureSQL_Sourc",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"TableName": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "anj_EneryTables"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "LoadID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DateTime",
+				"type": "datetime2",
+				"scale": 7
+			},
+			{
+				"name": "AEP_MW",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "DateKey",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "LoadDateTime",
+				"type": "datetime2",
+				"scale": 7
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": {
+				"value": "@dataset().TableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,20 @@
+{
+	"name": "MetadataDrivenCopyTask_u12_ControlDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQLcreditcard",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "MetadataDrivenCopyTask_u12_20250924"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "Incremental_Meta",
+			"table": "MainControlTable_u12"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

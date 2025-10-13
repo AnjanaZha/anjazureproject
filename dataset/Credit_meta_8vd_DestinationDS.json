@@ -1,0 +1,48 @@
+{
+	"name": "Credit_meta_8vd_DestinationDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "creditcardblobstorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"cw_fileName": {
+				"type": "String"
+			},
+			"cw_folderPath": {
+				"type": "Object"
+			},
+			"cw_container": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Credit_meta_8vd_20250925"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().cw_fileName",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().cw_folderPath",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "@dataset().cw_container",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

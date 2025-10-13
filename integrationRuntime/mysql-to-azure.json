@@ -1,0 +1,6 @@
+{
+	"name": "mysql-to-azure",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}

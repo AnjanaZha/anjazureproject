@@ -1,0 +1,21 @@
+{
+	"name": "sk_acc",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sk_linkedservice_blobstorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "silver/accounts",
+				"container": "sk-container"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

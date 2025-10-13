@@ -1,0 +1,20 @@
+{
+	"name": "MetadataDrivenCopyTask_ogz_ControlDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "azure_incrementalLoad",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "MetadataDrivenCopyTask_ogz_20250924"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "MainControlTable_ogz"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

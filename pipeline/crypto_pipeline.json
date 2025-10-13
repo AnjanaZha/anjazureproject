@@ -1,0 +1,287 @@
+{
+	"name": "crypto_pipeline",
+	"properties": {
+		"description": "Copy raw data from MySQL to bronze layer in ADLS",
+		"activities": [
+			{
+				"name": "forEachCoin",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.tableList",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "bronze",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "mysql db "
+								},
+								{
+									"name": "Destination",
+									"value": "crypto-container/bronze"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "MySqlSource",
+									"additionalColumns": [
+										{
+											"name": "coin_name",
+											"value": {
+												"value": "@item()",
+												"type": "Expression"
+											}
+										}
+									]
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"validateDataConsistency": false,
+								"logSettings": {
+									"enableCopyActivityLog": true,
+									"copyActivityLogSettings": {
+										"logLevel": "Warning",
+										"enableReliableLogging": false
+									},
+									"logLocationSettings": {
+										"linkedServiceName": {
+											"referenceName": "adls_full_load",
+											"type": "LinkedServiceReference"
+										},
+										"path": "crypto-container"
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "sourceDatasetCrypto",
+									"type": "DatasetReference",
+									"parameters": {
+										"cw_tableName": "@item()"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "sinkDatasetCrypto",
+									"type": "DatasetReference",
+									"parameters": {
+										"fileName": "@concat(item(), '.txt')"
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "merging",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "forEachCoin",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "crypto-container/bronze"
+					},
+					{
+						"name": "Destination",
+						"value": "crypto-container/bronze"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": false,
+							"wildcardFolderPath": "bronze",
+							"wildcardFileName": "*.txt",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings",
+							"copyBehavior": "MergeFiles"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ""
+						}
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"logSettings": {
+						"enableCopyActivityLog": true,
+						"copyActivityLogSettings": {
+							"logLevel": "Warning",
+							"enableReliableLogging": false
+						},
+						"logLocationSettings": {
+							"linkedServiceName": {
+								"referenceName": "adls_full_load",
+								"type": "LinkedServiceReference"
+							},
+							"path": "crypto-container"
+						}
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "sinkMDatasetCrypto",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "mergedDatasetCrypto",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "bronze_to_silver_crypto",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "merging",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "bronze_to_silver_crypto",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "silver_to_gold_crypto",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "bronze_to_silver_crypto",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/dennyaj10@gmail.com"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks1",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"tableList": {
+				"type": "array",
+				"defaultValue": [
+					"ada",
+					"avax",
+					"bch",
+					"bnb",
+					"btc",
+					"doge",
+					"eth",
+					"hbar",
+					"hype",
+					"link",
+					"sol",
+					"steth",
+					"sui",
+					"trx",
+					"usdc",
+					"usde",
+					"usdt",
+					"wbeth",
+					"wbtc",
+					"weeth",
+					"weth",
+					"wsteth",
+					"xlm",
+					"xrp"
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-10-02T10:01:39Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

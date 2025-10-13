@@ -1,0 +1,9 @@
+{
+	"name": "datatactorytrainingazure",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "a13cfa34-b9c9-4153-b7f8-01a2e8f21ada",
+		"tenantId": "2b32b1fa-7899-482e-a6de-be99c0ff5516"
+	}
+}

@@ -1,0 +1,62 @@
+{
+	"name": "df_traininganddevelopment",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "training_and_development_data.csv",
+				"folderPath": "dataflow",
+				"container": "bronze"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Employee ID",
+				"type": "String"
+			},
+			{
+				"name": "Training Date",
+				"type": "String"
+			},
+			{
+				"name": "Training Program Name",
+				"type": "String"
+			},
+			{
+				"name": "Training Type",
+				"type": "String"
+			},
+			{
+				"name": "Training Outcome",
+				"type": "String"
+			},
+			{
+				"name": "Location",
+				"type": "String"
+			},
+			{
+				"name": "Trainer",
+				"type": "String"
+			},
+			{
+				"name": "Training Duration(Days)",
+				"type": "String"
+			},
+			{
+				"name": "Training Cost",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

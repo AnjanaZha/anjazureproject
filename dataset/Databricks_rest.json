@@ -1,0 +1,13 @@
+{
+	"name": "Databricks_rest",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Credit_restapidatabricks",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

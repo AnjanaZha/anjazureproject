@@ -1,0 +1,16 @@
+{
+	"name": "Sql_KB_tables",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQL_Traning_KB",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Bank_kevin"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

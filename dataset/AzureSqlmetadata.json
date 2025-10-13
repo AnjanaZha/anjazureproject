@@ -1,0 +1,20 @@
+{
+	"name": "AzureSqlmetadata",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Ls_AzureSQL_Sourc",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Bank_kevin"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "metadata"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

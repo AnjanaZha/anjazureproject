@@ -1,0 +1,46 @@
+{
+	"name": "sk_prop_credscr",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sk_linkedservice_blobstorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "credit_scores_full.csv",
+				"folderPath": "bronze",
+				"container": "sk-container"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "score_id",
+				"type": "String"
+			},
+			{
+				"name": "user_id",
+				"type": "String"
+			},
+			{
+				"name": "credit_score",
+				"type": "String"
+			},
+			{
+				"name": "risk_level",
+				"type": "String"
+			},
+			{
+				"name": "last_updated",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

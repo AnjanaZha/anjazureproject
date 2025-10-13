@@ -1,0 +1,56 @@
+{
+	"name": "dataflowBanKevin",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "KB_transactions",
+						"type": "DatasetReference"
+					},
+					"name": "BronzeTrans",
+					"description": "Import data "
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Silver_transactions",
+						"type": "DatasetReference"
+					},
+					"name": "sinkTrans"
+				}
+			],
+			"transformations": [
+				{
+					"name": "splitTrans"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          TransactionID as string,",
+				"          AccountOriginID as string,",
+				"          AccountDestinationID as string,",
+				"          TransactionTypeID as string,",
+				"          Amount as string,",
+				"          TransactionDate as string,",
+				"          BranchID as string,",
+				"          Description as string,",
+				"          is_fraud as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> BronzeTrans",
+				"BronzeTrans split(not(isNull(columns())),",
+				"     disjoint: false) ~> splitTrans@(ValidRecords, RejectedRecords)",
+				"splitTrans@ValidRecords sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     filePattern:'transaction',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkTrans"
+			]
+		}
+	}
+}

@@ -1,0 +1,24 @@
+{
+	"name": "DestinationDataset_40x",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "creditcardblobstorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "creditcard_full_load",
+				"container": "venkat-bronze"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

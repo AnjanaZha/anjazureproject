@@ -1,0 +1,111 @@
+{
+	"name": "creditSqlSource",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQLcreditcard",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Customer_ID",
+				"type": "varchar"
+			},
+			{
+				"name": "Age",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Gender",
+				"type": "varchar"
+			},
+			{
+				"name": "Income_Level",
+				"type": "varchar"
+			},
+			{
+				"name": "Education",
+				"type": "varchar"
+			},
+			{
+				"name": "Location",
+				"type": "varchar"
+			},
+			{
+				"name": "Credit_Limit",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Interest_Rate",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Annual_Fee",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Late_Payment_Fee",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Hidden_Charges_Awareness",
+				"type": "varchar"
+			},
+			{
+				"name": "Regulation_Awareness",
+				"type": "varchar"
+			},
+			{
+				"name": "Monthly_Spending",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Impulse_Purchases",
+				"type": "varchar"
+			},
+			{
+				"name": "Debt_Accumulation",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Repayment_Behavior",
+				"type": "varchar"
+			},
+			{
+				"name": "Credit_Score_Category",
+				"type": "varchar"
+			},
+			{
+				"name": "Stress_Level",
+				"type": "varchar"
+			},
+			{
+				"name": "Satisfaction_With_Credit_Card",
+				"type": "varchar"
+			},
+			{
+				"name": "Dependency_On_Credit",
+				"type": "varchar"
+			},
+			{
+				"name": "Creation_Date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "ven_creditcard"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

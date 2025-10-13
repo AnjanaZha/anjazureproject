@@ -1,0 +1,96 @@
+{
+	"name": "bronze_to_silver_crypto",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "mergedDatasetCrypto",
+						"type": "DatasetReference"
+					},
+					"name": "bronzeSourceCrypto",
+					"description": "Import data from bronze layer"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "silverDatasetCrypto",
+						"type": "DatasetReference"
+					},
+					"name": "silverSinkCrypto",
+					"description": "Export data to silver layer ready for the gold layer in Databricks ",
+					"rejectedDataLinkedService": {
+						"referenceName": "blob_to_blob_crypto",
+						"type": "LinkedServiceReference"
+					}
+				}
+			],
+			"transformations": [
+				{
+					"name": "valueValidation",
+					"description": "filtering the negative values\n"
+				},
+				{
+					"name": "typeValidation",
+					"description": "casting columns to appropriate types"
+				},
+				{
+					"name": "nullValidation",
+					"description": "flag records that have null values"
+				},
+				{
+					"name": "ingestionDate",
+					"description": "adding ingestion date"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Date as string,",
+				"          Close as double,",
+				"          High as double,",
+				"          Low as double,",
+				"          Open as double,",
+				"          Volume as integer,",
+				"          coin_name as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     limit: 100,",
+				"     ignoreNoFilesFound: false) ~> bronzeSourceCrypto",
+				"typeValidation filter(Close >= 0 && High >= 0 && Low >= 0 && Open >= 0 && Volume >= 0) ~> valueValidation",
+				"ingestionDate cast(output(",
+				"          Date as date,",
+				"          Close as decimal(18,2),",
+				"          High as decimal(18,4),",
+				"          Low as decimal(18,4),",
+				"          Open as decimal(18,2),",
+				"          Volume as integer,",
+				"          coin_name as string",
+				"     ),",
+				"     errors: true) ~> typeValidation",
+				"valueValidation derive(has_null = iif(\r",
+				"        isNull(Date) || \r",
+				"        isNull(Close) || \r",
+				"        isNull(High) || \r",
+				"        isNull(Low) || \r",
+				"        isNull(Open) || \r",
+				"        isNull(Volume) || \r",
+				"        isNull(coin_name), \r",
+				"        true (), \r",
+				"        false ()\r",
+				"    )) ~> nullValidation",
+				"bronzeSourceCrypto derive(ingestion_date = currentUTC()) ~> ingestionDate",
+				"nullValidation sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     format: 'parquet',",
+				"     partitionFileNames:['silverCrypto'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> silverSinkCrypto"
+			]
+		}
+	}
+}

@@ -1,0 +1,65 @@
+{
+	"name": "KB_transactions",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStoragenewlast",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Bank_kevin"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "KB_transactions_with_fraud_label.csv",
+				"folderPath": "Bronze",
+				"container": "kevin-bank-data"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "TransactionID",
+				"type": "String"
+			},
+			{
+				"name": "AccountOriginID",
+				"type": "String"
+			},
+			{
+				"name": "AccountDestinationID",
+				"type": "String"
+			},
+			{
+				"name": "TransactionTypeID",
+				"type": "String"
+			},
+			{
+				"name": "Amount",
+				"type": "String"
+			},
+			{
+				"name": "TransactionDate",
+				"type": "String"
+			},
+			{
+				"name": "BranchID",
+				"type": "String"
+			},
+			{
+				"name": "Description",
+				"type": "String"
+			},
+			{
+				"name": "is_fraud",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

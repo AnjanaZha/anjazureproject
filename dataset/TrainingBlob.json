@@ -1,0 +1,24 @@
+{
+	"name": "TrainingBlob",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "creditcardblobstorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "training_and_development_data.csv",
+				"container": "ven-employee"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

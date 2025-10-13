@@ -1,0 +1,19 @@
+{
+	"name": "MetadataDrivenCopyTask_g0r_ControlDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "azure_incrementalLoad",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "MetadataDrivenCopyTask_g0r_20250924"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"table": "MainControlTable_g0r"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

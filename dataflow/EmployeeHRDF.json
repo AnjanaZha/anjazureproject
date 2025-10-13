@@ -1,0 +1,248 @@
+{
+	"name": "EmployeeHRDF",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Employee",
+						"type": "DatasetReference"
+					},
+					"name": "EmployeeHR"
+				},
+				{
+					"dataset": {
+						"referenceName": "EmployeeEngagement",
+						"type": "DatasetReference"
+					},
+					"name": "EmployyeEngagement"
+				},
+				{
+					"dataset": {
+						"referenceName": "EmployeeRecruitmentBlob",
+						"type": "DatasetReference"
+					},
+					"name": "EmployeeRecruitment"
+				},
+				{
+					"dataset": {
+						"referenceName": "TrainingBlob",
+						"type": "DatasetReference"
+					},
+					"name": "EmployeeTraining"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "EmployeeHROBT",
+						"type": "DatasetReference"
+					},
+					"name": "EmployeeHROBT"
+				}
+			],
+			"transformations": [
+				{
+					"name": "EmployeeCleaned"
+				},
+				{
+					"name": "EmpSelectedCol"
+				},
+				{
+					"name": "EmployeeRecNew"
+				},
+				{
+					"name": "EmpTrainingNew"
+				},
+				{
+					"name": "EmpJoinEngagement"
+				},
+				{
+					"name": "EJEJoinRecuitment"
+				},
+				{
+					"name": "Finaljoin"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EmpID as integer,",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          StartDate as string,",
+				"          ExitDate as string,",
+				"          Title as string,",
+				"          Supervisor as string,",
+				"          ADEmail as string,",
+				"          BusinessUnit as string,",
+				"          EmployeeStatus as string,",
+				"          EmployeeType as string,",
+				"          PayZone as string,",
+				"          EmployeeClassificationType as string,",
+				"          TerminationType as string,",
+				"          TerminationDescription as string,",
+				"          DepartmentType as string,",
+				"          Division as string,",
+				"          DOB as string,",
+				"          State as string,",
+				"          JobFunctionDescription as string,",
+				"          GenderCode as string,",
+				"          LocationCode as string,",
+				"          RaceDesc as string,",
+				"          MaritalDesc as string,",
+				"          {Performance Score} as string,",
+				"          {Current Employee Rating} as integer",
+				"     ),",
+				"     allowSchemaDrift: false,",
+				"     validateSchema: true,",
+				"     ignoreNoFilesFound: false) ~> EmployeeHR",
+				"source(output(",
+				"          {Employee ID} as integer,",
+				"          {Survey Date} as string,",
+				"          {Engagement Score} as integer,",
+				"          {Satisfaction Score} as integer,",
+				"          {Work-Life Balance Score} as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> EmployyeEngagement",
+				"source(output(",
+				"          {Applicant ID} as integer,",
+				"          {Application Date} as date 'dd/MM/yyyy',",
+				"          {First Name} as string,",
+				"          {Last Name} as string,",
+				"          Gender as string,",
+				"          {Date of Birth} as date 'dd/MM/yyyy',",
+				"          {Phone Number} as string,",
+				"          Email as string,",
+				"          Address as string,",
+				"          City as string,",
+				"          State as string,",
+				"          {Zip Code} as string,",
+				"          Country as string,",
+				"          {Education Level} as string,",
+				"          {Years of Experience} as integer,",
+				"          {Desired Salary} as double '000,000,000.000',",
+				"          {Job Title} as string,",
+				"          Status as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> EmployeeRecruitment",
+				"source(output(",
+				"          {Employee ID} as integer,",
+				"          {Training Date} as date 'dd/MM/yyyy',",
+				"          {Training Program Name} as string,",
+				"          {Training Type} as string,",
+				"          {Training Outcome} as string,",
+				"          Location as string,",
+				"          Trainer as string,",
+				"          {Training Duration(Days)} as integer,",
+				"          {Training Cost} as double '000,000,000.000'",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> EmployeeTraining",
+				"EmpSelectedCol derive(ExitDate = iif(isNull(ExitDate), \"Working\", ExitDate),",
+				"          TerminationDescription = iif(isNull(TerminationDescription), \"Not Applicable\", TerminationDescription)) ~> EmployeeCleaned",
+				"EmployeeHR select(mapColumn(",
+				"          EmpID,",
+				"          FirstName,",
+				"          LastName,",
+				"          StartDate,",
+				"          ExitDate,",
+				"          Title,",
+				"          BusinessUnit,",
+				"          EmployeeStatus,",
+				"          EmployeeType,",
+				"          PayZone,",
+				"          EmployeeClassificationType,",
+				"          TerminationType,",
+				"          TerminationDescription,",
+				"          DepartmentType,",
+				"          Division,",
+				"          State,",
+				"          JobFunctionDescription,",
+				"          RaceDesc,",
+				"          MaritalDesc,",
+				"          {Performance Score},",
+				"          {Current Employee Rating}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> EmpSelectedCol",
+				"EmployeeRecruitment select(mapColumn(",
+				"          {Applicant ID},",
+				"          City,",
+				"          State,",
+				"          Country,",
+				"          {Education Level},",
+				"          {Years of Experience},",
+				"          {Desired Salary},",
+				"          Status",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> EmployeeRecNew",
+				"EmployeeTraining select(mapColumn(",
+				"          {Employee ID},",
+				"          {Training Date},",
+				"          {Training Program Name},",
+				"          {Training Type},",
+				"          {Training Outcome},",
+				"          Location,",
+				"          {Training Duration(Days)},",
+				"          {Training Cost}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> EmpTrainingNew",
+				"EmployeeCleaned, EmployyeEngagement join(EmpID == {Employee ID},",
+				"     joinType:'outer',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> EmpJoinEngagement",
+				"EmpJoinEngagement, EmployeeRecNew join(EmpID == {Applicant ID},",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> EJEJoinRecuitment",
+				"EJEJoinRecuitment, EmployeeTraining join(EmpID == EmployeeTraining@{Employee ID},",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> Finaljoin",
+				"Finaljoin sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          EmpID as string,",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          StartDate as string,",
+				"          ExitDate as string,",
+				"          Title as string,",
+				"          Supervisor as string,",
+				"          ADEmail as string,",
+				"          BusinessUnit as string,",
+				"          EmployeeStatus as string,",
+				"          EmployeeType as string,",
+				"          PayZone as string,",
+				"          EmployeeClassificationType as string,",
+				"          TerminationType as string,",
+				"          TerminationDescription as string,",
+				"          DepartmentType as string,",
+				"          Division as string,",
+				"          DOB as string,",
+				"          State as string,",
+				"          JobFunctionDescription as string,",
+				"          GenderCode as string,",
+				"          LocationCode as string,",
+				"          RaceDesc as string,",
+				"          MaritalDesc as string,",
+				"          {Performance Score} as string,",
+				"          {Current Employee Rating} as string",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> EmployeeHROBT"
+			]
+		}
+	}
+}

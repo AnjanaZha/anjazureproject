@@ -1,0 +1,169 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "df_employee",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "df_traininganddevelopment",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "db_finaloutput",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "Sortingempidstartdate"
+				},
+				{
+					"name": "Fristnamereplaced"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "select2"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EmpID as string,",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          StartDate as string,",
+				"          ExitDate as string,",
+				"          Title as string,",
+				"          Supervisor as string,",
+				"          ADEmail as string,",
+				"          BusinessUnit as string,",
+				"          EmployeeStatus as string,",
+				"          EmployeeType as string,",
+				"          PayZone as string,",
+				"          EmployeeClassificationType as string,",
+				"          TerminationType as string,",
+				"          TerminationDescription as string,",
+				"          DepartmentType as string,",
+				"          Division as string,",
+				"          DOB as string,",
+				"          State as string,",
+				"          JobFunctionDescription as string,",
+				"          GenderCode as string,",
+				"          LocationCode as string,",
+				"          RaceDesc as string,",
+				"          MaritalDesc as string,",
+				"          {Performance Score} as string,",
+				"          {Current Employee Rating} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source(output(",
+				"          {Employee ID} as string,",
+				"          {Training Date} as string,",
+				"          {Training Program Name} as string,",
+				"          {Training Type} as string,",
+				"          {Training Outcome} as string,",
+				"          Location as string,",
+				"          Trainer as string,",
+				"          {Training Duration(Days)} as string,",
+				"          {Training Cost} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source2",
+				"source1 select(mapColumn(",
+				"          EmpID,",
+				"          FirstName,",
+				"          LastName,",
+				"          StartDate,",
+				"          ExitDate,",
+				"          Title,",
+				"          ADEmail,",
+				"          BusinessUnit,",
+				"          EmployeeStatus,",
+				"          EmployeeType,",
+				"          PayZone,",
+				"          EmployeeClassificationType,",
+				"          TerminationType,",
+				"          TerminationDescription,",
+				"          DepartmentType,",
+				"          Division,",
+				"          DOB,",
+				"          State,",
+				"          JobFunctionDescription,",
+				"          GenderCode,",
+				"          LocationCode,",
+				"          RaceDesc",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sort(asc(EmpID, true),",
+				"     asc(StartDate, true)) ~> Sortingempidstartdate",
+				"Sortingempidstartdate derive(FirstName = iifNull({FirstName}, 'unknown', 'unknown')) ~> Fristnamereplaced",
+				"Fristnamereplaced, source2 join(EmpID == {Employee ID},",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 select(mapColumn(",
+				"          EmpID,",
+				"          FirstName,",
+				"          LastName,",
+				"          StartDate,",
+				"          ExitDate,",
+				"          Title,",
+				"          ADEmail,",
+				"          BusinessUnit,",
+				"          EmployeeStatus,",
+				"          EmployeeType,",
+				"          PayZone,",
+				"          EmployeeClassificationType,",
+				"          TerminationType,",
+				"          TerminationDescription,",
+				"          DepartmentType,",
+				"          Division,",
+				"          DOB,",
+				"          State,",
+				"          JobFunctionDescription,",
+				"          GenderCode,",
+				"          LocationCode,",
+				"          RaceDesc,",
+				"          {Training Date},",
+				"          {Training Program Name},",
+				"          {Training Type},",
+				"          {Training Outcome},",
+				"          Location,",
+				"          Trainer,",
+				"          {Training Duration(Days)},",
+				"          {Training Cost}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}
