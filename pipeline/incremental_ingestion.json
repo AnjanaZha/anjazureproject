@@ -62,7 +62,7 @@
 						"referenceName": "Json_dynamic",
 						"type": "DatasetReference",
 						"parameters": {
-							"container": "bronze",
+							"container": "bronzeaj",
 							"folder": "cdc",
 							"file": "cdc.json"
 						}
