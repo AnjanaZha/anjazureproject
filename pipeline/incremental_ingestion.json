@@ -59,29 +59,18 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "last_cdc",
+						"referenceName": "Json_dynamic",
 						"type": "DatasetReference",
 						"parameters": {
-							"container": "bronzeaj",
+							"container": "bronze",
 							"folder": "cdc",
 							"file": "cdc.json"
 						}
 					},
-					"firstRowOnly": true
+					"firstRowOnly": false
 				}
 			}
 		],
-		"parameters": {
-			"schema": {
-				"type": "string"
-			},
-			"table": {
-				"type": "string"
-			},
-			"cdc_col": {
-				"type": "string"
-			}
-		},
 		"folder": {
 			"name": "anjana_netflix_pl"
 		},
