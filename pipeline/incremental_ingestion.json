@@ -62,9 +62,18 @@
 						"referenceName": "Json_dynamic",
 						"type": "DatasetReference",
 						"parameters": {
-							"container": " bronze",
-							"folder": "cdc",
-							"file": "cdc.json"
+							"container": {
+								"value": "@pipeline().parameters.schema",
+								"type": "Expression"
+							},
+							"folder": {
+								"value": "@pipeline().parameters.table",
+								"type": "Expression"
+							},
+							"file": {
+								"value": "@pipeline().parameters.cdc_col",
+								"type": "Expression"
+							}
 						}
 					},
 					"firstRowOnly": false
