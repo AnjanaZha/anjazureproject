@@ -59,10 +59,10 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "Json_dynamic",
+						"referenceName": "last_cdc",
 						"type": "DatasetReference",
 						"parameters": {
-							"container": "bronzeaj",
+							"schema": "bronzeaj",
 							"folder": "cdc",
 							"file": "cdc.json"
 						}
