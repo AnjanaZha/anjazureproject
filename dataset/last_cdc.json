@@ -5,14 +5,22 @@
 			"referenceName": "datalake_aj",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"schema": {
+				"type": "string"
+			},
+			"folder": {
+				"type": "string"
+			},
+			"file": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "Json",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobFSLocation",
-				"fileName": "cdc.json",
-				"folderPath": "cdc",
-				"fileSystem": "bronzeaj"
+				"type": "AzureBlobFSLocation"
 			}
 		},
 		"schema": {}
