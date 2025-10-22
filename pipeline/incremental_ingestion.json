@@ -1,0 +1,9 @@
+{
+	"name": "incremental_ingestion",
+	"properties": {
+		"folder": {
+			"name": "anjana_netflix_pl"
+		},
+		"annotations": []
+	}
+}
