@@ -62,18 +62,9 @@
 						"referenceName": "Json_dynamic",
 						"type": "DatasetReference",
 						"parameters": {
-							"container": {
-								"value": "@pipeline().parameters.schema",
-								"type": "Expression"
-							},
-							"folder": {
-								"value": "@pipeline().parameters.table",
-								"type": "Expression"
-							},
-							"file": {
-								"value": "@pipeline().parameters.cdc_col",
-								"type": "Expression"
-							}
+							"container": "bronzeaj",
+							"folder": "cdc",
+							"file": "cdc.json"
 						}
 					},
 					"firstRowOnly": false
@@ -82,13 +73,16 @@
 		],
 		"parameters": {
 			"schema": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "bronzeaj"
 			},
 			"table": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "cdc"
 			},
 			"cdc_col": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "cdc.json"
 			}
 		},
 		"folder": {
