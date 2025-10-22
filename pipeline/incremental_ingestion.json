@@ -73,16 +73,13 @@
 		],
 		"parameters": {
 			"schema": {
-				"type": "string",
-				"defaultValue": "bronzeaj"
+				"type": "string"
 			},
 			"table": {
-				"type": "string",
-				"defaultValue": "cdc"
+				"type": "string"
 			},
 			"cdc_col": {
-				"type": "string",
-				"defaultValue": "cdc.json"
+				"type": "string"
 			}
 		},
 		"folder": {
